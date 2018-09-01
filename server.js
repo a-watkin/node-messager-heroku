@@ -1,3 +1,5 @@
+const PORT = process.env.PORT || 5000
+
 var express = require('express')
 var bodyParser = require('body-parser')
 
@@ -134,6 +136,6 @@ io.on('connection', (socket) => {
 	console.log('a user connected')
 })
 
-var server = http.listen(5000, () => {
+var server = http.listen(PORT, () => {
     console.log('server is listening on port', server.address().port)
 })
