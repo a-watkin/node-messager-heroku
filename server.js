@@ -2,12 +2,12 @@ var express = require('express')
 var bodyParser = require('body-parser')
 
 // for environment variables from .env file
-require('dotenv').config()
+// require('dotenv').config()
 
-const db = ({
-    username: process.env.DB_USER,
-    password: process.env.DB_PASS
-})
+// const db = ({
+//     username: process.env.DB_USER,
+//     password: process.env.DB_PASS
+// })
 
 // console.log(db)
 
@@ -20,7 +20,7 @@ var mongoose = require('mongoose')
 mongoose.Promise = Promise
 
 // make database connection
-var dbUrl = `mongodb://${db.username}:${db.password}@ds139722.mlab.com:39722/bobbytables`
+var dbUrl = `mongodb://user:fx83gtplus@ds139722.mlab.com:39722/bobbytables`
 
 // uses the node.js http server module passing in the express app
 // make sure that it is with an uppercase S
