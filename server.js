@@ -134,6 +134,6 @@ io.on('connection', (socket) => {
 	console.log('a user connected')
 })
 
-var server = http.listen(3000, () => {
+var server = http.listen(5000, () => {
     console.log('server is listening on port', server.address().port)
 })
