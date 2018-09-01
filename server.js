@@ -1,3 +1,4 @@
+// heroku env variable
 const PORT = process.env.PORT || 5000
 
 var express = require('express')
@@ -139,6 +140,7 @@ io.on('connection', (socket) => {
 	console.log('a user connected')
 })
 
+// heroku env variable
 var server = http.listen(PORT, () => {
     console.log('server is listening on port', server.address().port)
 })
