@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+
+    <div class="container">
+
+        <div class="jumbotron">
+
+            <h1 class="display-4">Send message</h1>
+
+            <br>
+
+            <input id="name" class="form-control" placeholder="name">
+            <br>
+            <textarea id="message" class="form-control" placeholder="Message"></textarea>
+            <br>
+            <button id="send" class="btn btn-success">Send</button>
+            <button id="delete" class="btn btn-danger">Delete All</button>
+
+
+
+
+        </div>
+
+        <div id="messages">
+
+        </div>
+    </div>
+    
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+
+        // intialises socket.io
+        var socket = io()
+
+        // document on ready
+        $( () => {
+            console.log('ready')
+            
+            $('#send').click( () => {
+                
+                    var message = {
+                        "name": $("#name").val(),
+                        "message": $("#message").val()
+                    }
+                    
+                    postMessage(message)
+            })
+
+            getMessages()
+
+            $('#delete').click( () => {
+                // console.log('you clicked on delete')
+                deleteAll()
+            })
+        })
+
+        // listens for new messages and passes them to addMessages
+        // which puts them on the page
+        // no paramater is supplied because message is the same as the callback
+        socket.on('message', addMessages)
+
+        function addMessages(message) {
+            // there was a problem here, it was targetting message instead of messages
+            $("#messages").append(
+                `<h4> ${message.name} </h4>
+                <p>${message.message}</p>`
+            )
+        }
+
+        function getMessages() {
+            console.log('called')
+            $.get('http://localhost:3000/messages', (data) => {
+                // data.forEach(element => {
+                //     addMessages(element)
+                // });
+
+                // same as above with the call back being replaced with the addMessages function
+                data.forEach(addMessages)
+            })
+        }
+
+        function postMessage(message) {
+            // the JSON object message seems ok here
+            console.log('the message is ', message)
+
+            testData = {
+                "name": "test data",
+                "message": "this is a test"
+            }
+
+            console.log('the message is ', testData)
+
+            $.post('http://localhost:3000/messages', message)
+        }
+
+        function deleteAll() {
+            $.post('http://localhost:3000/delete', (res) => {
+                if(res === 'OK') {
+                    console.log('get messages')
+                    // remove all child elements
+                    $('#messages').empty()
+                }
+            })
+        }
+    
+    </script> 
+  </body>
+</html>

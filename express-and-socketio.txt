@@ -1,0 +1,6 @@
+Socket.io needs to tie in with express
+
+so create a regular http server with node
+
+then share that with express and socket.io
+
