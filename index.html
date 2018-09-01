@@ -89,7 +89,7 @@
 
         function getMessages() {
             console.log('called')
-            $.get('http://localhost:3000/messages', (data) => {
+            $.get('http://localhost/messages', (data) => {
                 // data.forEach(element => {
                 //     addMessages(element)
                 // });
@@ -110,11 +110,11 @@
 
             console.log('the message is ', testData)
 
-            $.post('http://localhost:3000/messages', message)
+            $.post('http://localhost/messages', message)
         }
 
         function deleteAll() {
-            $.post('http://localhost:3000/delete', (res) => {
+            $.post('http://localhost/delete', (res) => {
                 if(res === 'OK') {
                     console.log('get messages')
                     // remove all child elements
