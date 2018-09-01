@@ -24,6 +24,9 @@ mongoose.Promise = Promise
 // make database connection
 var dbUrl = process.env.PROD_MONGODB
 
+console.log('dbUrl')
+
+
 // uses the node.js http server module passing in the express app
 // make sure that it is with an uppercase S
 var http = require('http').Server(app)
