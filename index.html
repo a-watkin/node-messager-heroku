@@ -89,7 +89,7 @@
 
         function getMessages() {
             console.log('called')
-            $.get('http://localhost/messages', (data) => {
+            $.get('https://quiet-ocean-41221.herokuapp.com/messages', (data) => {
                 // data.forEach(element => {
                 //     addMessages(element)
                 // });
@@ -110,11 +110,11 @@
 
             console.log('the message is ', testData)
 
-            $.post('http://localhost/messages', message)
+            $.post('https://quiet-ocean-41221.herokuapp.com/messages', message)
         }
 
         function deleteAll() {
-            $.post('http://localhost/delete', (res) => {
+            $.post('https://quiet-ocean-41221.herokuapp.com/delete', (res) => {
                 if(res === 'OK') {
                     console.log('get messages')
                     // remove all child elements
