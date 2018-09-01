@@ -22,7 +22,7 @@ var mongoose = require('mongoose')
 mongoose.Promise = Promise
 
 // make database connection
-var dbUrl = PROD_MONGODB
+var dbUrl = process.env.PROD_MONGODB
 
 // uses the node.js http server module passing in the express app
 // make sure that it is with an uppercase S
