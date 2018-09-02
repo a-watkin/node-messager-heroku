@@ -72,7 +72,9 @@ mongoose.connect(dbUrl, { useNewUrlParser: true }, (err) => {
 
 var Message = mongoose.model('Message', {
 	name: String,
-	message: String
+	dateTime: Object,
+	message: String,
+
 })
 
 
