@@ -46,25 +46,13 @@
 
     <script>
 
-
-    	var BASE_URL = 'http://localhost:3000/'
-    	// 'http://localhost:3000/'
-    	// https://quiet-ocean-41221.herokuapp.com/
-
-    	// console.log('BASE_URL', BASE_URL)
-
-
-
+    	var BASE_URL = window.location.href
 
         // intialises socket.io
         var socket = io()
 
         // document on ready
         $( () => {
-
-        	checkUrl()
-
-            
             $('#send').click( () => {
                 
                     var message = {
@@ -87,27 +75,6 @@
         // which puts them on the page
         // no paramater is supplied because message is the same as the callback
         socket.on('message', addMessages)
-
-
-        // checks if it should use localhost
-        function checkUrl() {
-        	console.log('checkUrl')
-
-        	console.log(BASE_URL + 'test')
-
-            $.get(BASE_URL + 'test', (data) => {
-    		
-	    		console.log('should be called', data)
-	    		if( data === 'local') {
-	    			BASE_URL = 'http://localhost:3000/'
-	    			console.log('setting base URL', BASE_URL)
-	    		} else {
-	    			BASE_URL = 'https://quiet-ocean-41221.herokuapp.com/'
-	    			console.log('setting base URL', BASE_URL)
-	    		}
-    		})
-        }
-
 
         function addMessages(message) {
             // there was a problem here, it was targetting message instead of messages

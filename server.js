@@ -76,16 +76,6 @@ var Message = mongoose.model('Message', {
 })
 
 
-app.get('/test', (req, res) => {
-	console.log('test method')
-	if ( os.hostname() === "a-Z97-D3H" ) {
-		res.send('local')
-	} else {
-		res.send('heroku')
-	}
-})
-
-
 // url, request, response
 app.get('/messages', (req, res) => {
 	// changed to get messages fromt he database
@@ -99,6 +89,7 @@ app.get('/messages', (req, res) => {
 	})
 })
 
+
 app.get('/messages/:user', (req, res) => {
 	Message.find({}, (err, messages) => {
 		if(err) {
@@ -108,7 +99,6 @@ app.get('/messages/:user', (req, res) => {
 		res.send(messages)
 	})
 })
-
 
 
 app.post('/messages', async (req, res) => {
