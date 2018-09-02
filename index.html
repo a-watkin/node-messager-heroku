@@ -77,7 +77,6 @@
         socket.on('message', addMessages)
 
         function addMessages(message) {
-            // there was a problem here, it was targetting message instead of messages
             $("#messages").prepend(
                 `<h4> ${message.name} </h4>
                 <p>${message.message}</p>`
@@ -85,32 +84,20 @@
         }
 
         function getMessages() {
-            // console.log('called')
             $.get(BASE_URL + 'messages', (data, success) => {
-
-            	// console.log('success', success)
-
-                // data.forEach(element => {
-                //     addMessages(element)
-                // });
-
-                // same as above with the call back being replaced with the addMessages function
                 data.forEach(addMessages)
             })
         }
 
         function postMessage(message) {
-            // the JSON object message seems ok here
-            console.log('the message is ', message)
-
-            testData = {
-                "name": "test data",
-                "message": "this is a test"
-            }
-
-            console.log('the message is ', testData)
-
-            $.post(BASE_URL + 'messages', message)
+            $.post(BASE_URL + 'messages', message, (res) => {
+            	if ( res === 'OK' ) {
+            		console.log('header response is ', res)
+            		console.log('hmm')
+            		$('#name').val('')
+            		$('#message').val('')
+            	}
+            })
         }
 
         function deleteAll() {
