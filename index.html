@@ -51,19 +51,19 @@
     	// 'http://localhost:3000/'
     	// https://quiet-ocean-41221.herokuapp.com/
 
-	    $.ajax(BASE_URL, {
-    		404: function (response) {
-    			BASE_URL = 'https://quiet-ocean-41221.herokuapp.com/'
-    		}
-    	})
-
     	// console.log('BASE_URL', BASE_URL)
+
+
+
 
         // intialises socket.io
         var socket = io()
 
         // document on ready
         $( () => {
+
+        	checkUrl()
+
             
             $('#send').click( () => {
                 
@@ -88,6 +88,27 @@
         // no paramater is supplied because message is the same as the callback
         socket.on('message', addMessages)
 
+
+        // checks if it should use localhost
+        function checkUrl() {
+        	console.log('checkUrl')
+
+        	console.log(BASE_URL + 'test')
+
+            $.get(BASE_URL + 'test', (data) => {
+    		
+	    		console.log('should be called', data)
+	    		if( data === 'local') {
+	    			BASE_URL = 'http://localhost:3000/'
+	    			console.log('setting base URL', BASE_URL)
+	    		} else {
+	    			BASE_URL = 'https://quiet-ocean-41221.herokuapp.com/'
+	    			console.log('setting base URL', BASE_URL)
+	    		}
+    		})
+        }
+
+
         function addMessages(message) {
             // there was a problem here, it was targetting message instead of messages
             $("#messages").prepend(
@@ -97,10 +118,10 @@
         }
 
         function getMessages() {
-            console.log('called')
+            // console.log('called')
             $.get(BASE_URL + 'messages', (data, success) => {
 
-            	console.log('success', success)
+            	// console.log('success', success)
 
                 // data.forEach(element => {
                 //     addMessages(element)

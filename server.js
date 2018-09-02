@@ -33,6 +33,7 @@ mongoose.Promise = Promise
 var PORT = 3000;
 var dbUrl = null;
 
+
 if ( os.hostname() === "a-Z97-D3H" ) {
 	console.log('on local machine')
 
@@ -72,6 +73,16 @@ mongoose.connect(dbUrl, { useNewUrlParser: true }, (err) => {
 var Message = mongoose.model('Message', {
 	name: String,
 	message: String
+})
+
+
+app.get('/test', (req, res) => {
+	console.log('test method')
+	if ( os.hostname() === "a-Z97-D3H" ) {
+		res.send('local')
+	} else {
+		res.send('heroku')
+	}
 })
 
 
