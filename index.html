@@ -27,9 +27,6 @@
             <button id="send" class="btn btn-success">Send</button>
             <button id="delete" class="btn btn-danger">Delete All</button>
 
-
-
-
         </div>
 
         <div id="messages">
@@ -49,12 +46,24 @@
 
     <script>
 
+
+    	var BASE_URL = 'http://localhost:3000/'
+    	// 'http://localhost:3000/'
+    	// https://quiet-ocean-41221.herokuapp.com/
+
+	    $.ajax(BASE_URL, {
+    		404: function (response) {
+    			BASE_URL = 'https://quiet-ocean-41221.herokuapp.com/'
+    		}
+    	})
+
+    	// console.log('BASE_URL', BASE_URL)
+
         // intialises socket.io
         var socket = io()
 
         // document on ready
         $( () => {
-            console.log('ready')
             
             $('#send').click( () => {
                 
@@ -89,7 +98,10 @@
 
         function getMessages() {
             console.log('called')
-            $.get('https://quiet-ocean-41221.herokuapp.com/messages', (data) => {
+            $.get(BASE_URL + 'messages', (data, success) => {
+
+            	console.log('success', success)
+
                 // data.forEach(element => {
                 //     addMessages(element)
                 // });
@@ -108,13 +120,13 @@
                 "message": "this is a test"
             }
 
-            console.log('clear input fields here')
+            console.log('the message is ', testData)
 
-            $.post('https://quiet-ocean-41221.herokuapp.com/messages', message)
+            $.post(BASE_URL + 'messages', message)
         }
 
         function deleteAll() {
-            $.post('https://quiet-ocean-41221.herokuapp.com/delete', (res) => {
+            $.post(BASE_URL + 'delete', (res) => {
                 if(res === 'OK') {
                     console.log('get messages')
                     // remove all child elements

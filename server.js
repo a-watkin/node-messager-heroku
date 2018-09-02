@@ -1,31 +1,29 @@
 var os = require('os')
 
+
 var express = require('express')
 var bodyParser = require('body-parser')
+
+// for environment variables from .env file
+require('dotenv').config()
+
+
 var app = express()
 
-// // uses the node.js http server module passing in the express app
+
+// uses the node.js http server module passing in the express app
 // make sure that it is with an uppercase S
 var http = require('http').Server(app)
 
 
-// // without this line the app crashes
-// // above works without crashing but body is undifined coming from the browser only
-// // so it works now so above seems to be where the problem was
-// // i guess urlencoded is needed
-// app.use(bodyParser.urlencoded({extended: false}))
-// // code is wroking now, but the app crashes every other save
-// // i think this is due to nodemon and the port not being released fast enough
-// // because it is literally every other save that causes a crash
+app.use(express.static(__dirname))
+
+// required to parse data from the front end
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: false}))
 
 var io = require('socket.io')(http)
 
-var jsonParser = bodyParser.json()
-var urlencodedParser = bodyParser.urlencoded({ extended: true })
-
-app.use(express.static(__dirname))
-app.use(bodyParser.json())
-app.use(bodyParser.json({ type: 'application/*+json' }))
 
 // for talking to mongodb
 var mongoose = require('mongoose')
@@ -49,7 +47,7 @@ if ( os.hostname() === "a-Z97-D3H" ) {
 	})
 
 	dbUrl = `mongodb://${db.username}:${db.password}@ds139722.mlab.com:39722/bobbytables`
-	
+
 
 } else {
 	console.log('on heroku')
@@ -76,6 +74,7 @@ var Message = mongoose.model('Message', {
 	message: String
 })
 
+
 // url, request, response
 app.get('/messages', (req, res) => {
 	// changed to get messages fromt he database
@@ -84,7 +83,7 @@ app.get('/messages', (req, res) => {
 		if(err) {
 			console.log(err)
 		}
-		console.log('messages from db ', res)
+		// console.log('messages from db ', res)
 		res.send(messages)
 	})
 })
@@ -100,8 +99,12 @@ app.get('/messages/:user', (req, res) => {
 })
 
 
+
 app.post('/messages', async (req, res) => {
+	console.log(req.body)
 	try {
+		// throw 'error'
+		// throw 'some error'
 
 		// new database object, req.body contains the same structure
 		var message = new Message(req.body)
@@ -127,6 +130,7 @@ app.post('/messages', async (req, res) => {
 		// console.log('hello from finally')
 	}
 })
+
 
 app.post('/delete', (req, res) => {
 	// console.log('test')
