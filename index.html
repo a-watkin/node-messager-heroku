@@ -81,7 +81,7 @@
 
         function addMessages(message) {
             // there was a problem here, it was targetting message instead of messages
-            $("#messages").append(
+            $("#messages").prepend(
                 `<h4> ${message.name} </h4>
                 <p>${message.message}</p>`
             )
