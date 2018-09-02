@@ -1,65 +1,75 @@
-// heroku env variable
-const PORT = process.env.PORT || 5000
+var os = require('os')
 
 var express = require('express')
 var bodyParser = require('body-parser')
-
-// for environment variables from .env file
-// require('dotenv').config()
-
-// const db = ({
-//     username: process.env.DB_USER,
-//     password: process.env.DB_PASS
-// })
-
-// console.log(db)
-
 var app = express()
 
-// for mongodb
-var mongoose = require('mongoose')
-
-// tell mongoose to use default es6 promise library
-mongoose.Promise = Promise
-
-// make database connection
-var dbUrl = process.env.PROD_MONGODB
-
-console.log('dbUrl', dbUrl)
-
-
-// uses the node.js http server module passing in the express app
+// // uses the node.js http server module passing in the express app
 // make sure that it is with an uppercase S
 var http = require('http').Server(app)
 
+
+// // without this line the app crashes
+// // above works without crashing but body is undifined coming from the browser only
+// // so it works now so above seems to be where the problem was
+// // i guess urlencoded is needed
+// app.use(bodyParser.urlencoded({extended: false}))
+// // code is wroking now, but the app crashes every other save
+// // i think this is due to nodemon and the port not being released fast enough
+// // because it is literally every other save that causes a crash
+
 var io = require('socket.io')(http)
 
+var jsonParser = bodyParser.json()
+var urlencodedParser = bodyParser.urlencoded({ extended: true })
+
 app.use(express.static(__dirname))
-// app.use(bodyParser.json())
-// var jsonParser = bodyParser.json()
-// var urlencodedParser = bodyParser.urlencoded({ extended: true })
-// app.use(bodyParser.json({ type: 'application/*+json' }))
-
 app.use(bodyParser.json())
-// without this line the app crashes
-// above works without crashing but body is undifined coming from the browser only
+app.use(bodyParser.json({ type: 'application/*+json' }))
 
-// so it works now so above seems to be where the problem was
-// i guess urlencoded is needed
-app.use(bodyParser.urlencoded({extended: false}))
+// for talking to mongodb
+var mongoose = require('mongoose')
+// tell mongoose to use default es6 promise library
+mongoose.Promise = Promise
 
-// code is wroking now, but the app crashes every other save
-// i think this is due to nodemon and the port not being released fast enough
-// because it is literally every other save that causes a crash
+var PORT = 3000;
+var dbUrl = null;
 
+if ( os.hostname() === "a-Z97-D3H" ) {
+	console.log('on local machine')
 
-// removed because it's also deprechiated, but without some second argument
-// there's a warning message 
-// second argument
+	// PORT = 2999
+
+	// for environment variables from .env file
+	require('dotenv').config()
+
+	const db = ({
+	    username: process.env.DB_USER,
+	    password: process.env.DB_PASS
+	})
+
+	dbUrl = `mongodb://${db.username}:${db.password}@ds139722.mlab.com:39722/bobbytables`
+	
+
+} else {
+	console.log('on heroku')
+
+	// heroku env variable
+	PORT = process.env.PORT || 5000
+
+	// make database connection
+	dbUrl = process.env.PROD_MONGODB
+}
+
+console.log(dbUrl)
+// // removed because it's also deprechiated, but without some second argument
+// // there's a warning message 
+// // second argument
 // useMongoClient: true
-mongoose.connect(dbUrl, {}, (err) => {
+mongoose.connect(dbUrl, { useNewUrlParser: true }, (err) => {
     console.log('mongo db conncetions', err)
 })
+
 
 var Message = mongoose.model('Message', {
 	name: String,
@@ -74,6 +84,7 @@ app.get('/messages', (req, res) => {
 		if(err) {
 			console.log(err)
 		}
+		console.log('messages from db ', res)
 		res.send(messages)
 	})
 })
@@ -83,7 +94,7 @@ app.get('/messages/:user', (req, res) => {
 		if(err) {
 			console.log(err)
 		}
-		console.log('sending messages ')
+		console.log('messages from db for user ', res)
 		res.send(messages)
 	})
 })
@@ -91,8 +102,6 @@ app.get('/messages/:user', (req, res) => {
 
 app.post('/messages', async (req, res) => {
 	try {
-		// throw 'error'
-		// throw 'some error'
 
 		// new database object, req.body contains the same structure
 		var message = new Message(req.body)
@@ -135,12 +144,15 @@ app.post('/delete', (req, res) => {
 
 })
 
-// logs a message anytime a client connects
+// // logs a message anytime a client connects
 io.on('connection', (socket) => {
 	console.log('a user connected')
 })
 
-// heroku env variable
-var server = http.listen(PORT, () => {
+var server = http.listen(PORT, (err) => {
     console.log('server is listening on port', server.address().port)
+
+    if( err ) {
+    	console.log(err)
+    }
 })
